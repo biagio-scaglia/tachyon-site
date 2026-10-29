@@ -1,0 +1,1032 @@
+/* Laboratorio Tachyon: a lab notebook on blue graph paper, coloured after her design. */
+
+:root {
+  --paper: #f3f7fa;
+  --grid: #dde8f0;
+  --grid-major: #c9dae6;
+  --ink: #2b1a14; /* chestnut-black, from her hair in shadow */
+  --chestnut: #7a3424; /* hair */
+  --mustard: #e2b33b; /* sweater vest */
+  --mustard-ink: #8a6200; /* mustard dark enough for text */
+  --margin-red: #e48a94; /* the notebook's ruled margin */
+  --muted: #5b6670;
+
+  --display: 'Dela Gothic One', 'Zen Kaku Gothic New', sans-serif;
+  --text: 'Zen Kaku Gothic New', system-ui, sans-serif;
+
+  --cell: 24px;
+  --margin: 168px;
+  --mast: 76px;
+  --gutter: 32px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-major) 1px, transparent 1px),
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:
+    calc(var(--cell) * 5) calc(var(--cell) * 5),
+    calc(var(--cell) * 5) calc(var(--cell) * 5),
+    var(--cell) var(--cell),
+    var(--cell) var(--cell);
+  color: var(--ink);
+  font-family: var(--text);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+p,
+ol,
+ul,
+dl,
+dd,
+blockquote,
+figure {
+  margin: 0;
+}
+
+a {
+  color: var(--chestnut);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.skip {
+  position: absolute;
+  left: 16px;
+  top: -60px;
+  z-index: 100;
+  padding: 8px 14px;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.skip:focus {
+  top: 12px;
+}
+
+/* ------------------------------------------------------------------ masthead */
+
+.shell {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+.masthead {
+  position: relative;
+  z-index: 10;
+  height: var(--mast);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 0 var(--gutter);
+  border-bottom: 2px solid var(--ink);
+  background: var(--paper);
+}
+
+.wordmark {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+  color: var(--ink);
+  text-decoration: none;
+  font-family: var(--display);
+  font-size: 20px;
+}
+
+.wordmark-kana {
+  font-family: var(--text);
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--chestnut);
+  letter-spacing: 0.08em;
+}
+
+.nav {
+  display: flex;
+  gap: 4px 22px;
+  padding: 0;
+  list-style: none;
+}
+
+.nav a {
+  padding: 2px 2px;
+  color: var(--ink);
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* Highlighter stroke, like marking the current page in the notebook. */
+.nav a:hover,
+.nav a.active {
+  background: linear-gradient(transparent 58%, var(--mustard) 58%, var(--mustard) 92%, transparent 92%);
+}
+
+.nav a.active {
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------------ home hero */
+
+.hero {
+  position: relative;
+  height: calc(100svh - var(--mast));
+  min-height: 560px;
+  overflow: hidden;
+}
+
+.hero-name {
+  position: absolute;
+  inset: 4% var(--gutter) auto;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--display);
+  font-weight: 400;
+  /* Bounded by height too, so the name stays in the top half on wide, short screens. */
+  font-size: clamp(64px, min(16.5vw, 27svh), 280px);
+  line-height: 0.86;
+  letter-spacing: -0.02em;
+  color: var(--mustard);
+  text-shadow: 0.035em 0.035em 0 var(--chestnut);
+  user-select: none;
+}
+
+.hero-name span:last-child {
+  align-self: flex-end;
+}
+
+.stage {
+  position: relative;
+}
+
+.hero-stage {
+  position: absolute;
+  inset: 0;
+}
+
+.lab-canvas {
+  position: absolute !important;
+  inset: 0;
+  touch-action: pan-y;
+}
+
+/* Bottom band: intro on the left, controls on the right, the centre left free for her feet. */
+.hero-foot {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 32px;
+  pointer-events: none;
+}
+
+.hero-intro {
+  max-width: 30ch;
+  font-size: 19px;
+  line-height: 1.55;
+}
+
+.hero-hints {
+  display: grid;
+  gap: 4px;
+  padding: 0;
+  list-style: none;
+  text-align: right;
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.hero-hints strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------------ contents */
+
+.contents {
+  display: grid;
+  grid-template-columns: var(--margin) minmax(0, 720px);
+  padding: 64px var(--gutter) 88px 0;
+  border-top: 2px solid var(--ink);
+  background: linear-gradient(90deg, transparent calc(var(--margin) - 1px), var(--margin-red) calc(var(--margin) - 1px), var(--margin-red) calc(var(--margin) + 1px), transparent calc(var(--margin) + 1px));
+}
+
+.contents-title {
+  grid-column: 2;
+  padding-left: 32px;
+  margin-bottom: 28px;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 1.2;
+}
+
+.toc {
+  grid-column: 2;
+  display: grid;
+  gap: 22px;
+  padding: 0 0 0 32px;
+  list-style: none;
+}
+
+.toc-link {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.toc-label {
+  font-size: 23px;
+  font-weight: 700;
+}
+
+.toc-link:hover .toc-label {
+  background: linear-gradient(transparent 58%, var(--mustard) 58%, var(--mustard) 92%, transparent 92%);
+}
+
+.toc-leader {
+  flex: 1;
+  border-bottom: 2px dotted var(--ink);
+  transform: translateY(-6px);
+}
+
+.toc-folio {
+  font-weight: 700;
+  color: var(--chestnut);
+}
+
+.toc-blurb {
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ notebook pages */
+
+.page {
+  position: relative;
+  max-width: calc(var(--margin) + 760px);
+  padding: 56px var(--gutter) 96px 0;
+}
+
+/* The red ruled margin runs the full height of the page. */
+.page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--margin) - 1px);
+  width: 2px;
+  background: var(--margin-red);
+}
+
+.page-head,
+.section {
+  display: grid;
+  grid-template-columns: var(--margin) minmax(0, 1fr);
+}
+
+.page-head > *,
+.section-body {
+  grid-column: 2;
+  padding-left: 32px;
+}
+
+.page-head {
+  margin-bottom: 48px;
+}
+
+.folio {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: start;
+  padding: 0 24px 0 var(--gutter);
+  text-align: right;
+  font-weight: 700;
+  color: var(--chestnut);
+  padding-top: 0.6em;
+}
+
+.page-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(44px, 7vw, 88px);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  color: var(--chestnut);
+  overflow-wrap: anywhere;
+}
+
+.lead {
+  margin-top: 18px;
+  max-width: 50ch;
+  font-size: 21px;
+  line-height: 1.5;
+}
+
+.section {
+  margin-bottom: 56px;
+}
+
+.margin-note {
+  grid-column: 1;
+  padding: 6px 24px 0 var(--gutter);
+  text-align: right;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.section-body {
+  max-width: calc(68ch + 32px);
+}
+
+.section-body > * + * {
+  margin-top: 16px;
+}
+
+.section-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 1.25;
+  margin-bottom: 4px;
+}
+
+.section-title a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.section-title a:hover {
+  background: linear-gradient(transparent 58%, var(--mustard) 58%, var(--mustard) 92%, transparent 92%);
+}
+
+/* stats */
+
+.stats {
+  display: grid;
+  gap: 10px;
+}
+
+.stat {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+}
+
+.stat dt {
+  font-weight: 500;
+}
+
+.stat dd {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.meter {
+  flex: 1;
+  height: 10px;
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+}
+
+.meter span {
+  display: block;
+  height: 100%;
+  background: var(--chestnut);
+}
+
+.stat-value {
+  min-width: 118px;
+  font-weight: 700;
+}
+
+/* swatches */
+
+.swatches {
+  display: grid;
+  gap: 12px;
+  padding: 0;
+  list-style: none;
+}
+
+.swatches li {
+  display: grid;
+  grid-template-columns: 56px 90px minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+}
+
+.chip {
+  width: 56px;
+  height: 34px;
+  background: var(--chip);
+  border: 1.5px solid var(--ink);
+  border-radius: 3px;
+}
+
+.swatches li > span:last-child {
+  color: var(--muted);
+}
+
+/* timeline: this one is a real sequence */
+
+.timeline {
+  position: relative;
+  display: grid;
+  gap: 20px;
+  padding: 4px 0 0 28px;
+  list-style: none;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  background: var(--ink);
+}
+
+.timeline li {
+  position: relative;
+  display: grid;
+}
+
+.timeline li::before {
+  content: '';
+  position: absolute;
+  left: -28px;
+  top: 7px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--mustard);
+  border: 2px solid var(--ink);
+}
+
+.timeline-date {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--mustard-ink);
+}
+
+.timeline li > span:last-child {
+  color: var(--muted);
+}
+
+/* quotes */
+
+.quotes {
+  display: grid;
+  gap: 14px;
+  padding: 0;
+  list-style: none;
+}
+
+.quotes blockquote {
+  padding-left: 16px;
+  border-left: 4px solid var(--mustard);
+  font-size: 20px;
+  line-height: 1.45;
+}
+
+.plain-list {
+  padding-left: 20px;
+}
+
+.plain-list li + li {
+  margin-top: 6px;
+}
+
+/* diary */
+
+.diary-list {
+  padding: 0;
+  list-style: none;
+}
+
+.diary-list .section {
+  margin-bottom: 40px;
+}
+
+.pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding-top: 24px;
+  border-top: 2px solid var(--ink);
+}
+
+.pager a {
+  display: flex;
+  flex-direction: column;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.pager a span {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.pager-next {
+  text-align: right;
+}
+
+/* ------------------------------------------------------------------ experiments */
+
+.bench {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(380px, 520px);
+  min-height: calc(100svh - var(--mast));
+}
+
+.bench-stage {
+  position: sticky;
+  top: 0;
+  height: calc(100svh - var(--mast));
+}
+
+.bench-panel {
+  padding: 48px var(--gutter) 72px;
+  border-left: 2px solid var(--ink);
+  background: var(--paper);
+}
+
+.bench-panel .folio {
+  display: block;
+  padding: 0;
+  text-align: left;
+}
+
+.bench-panel .page-title {
+  font-size: clamp(40px, 4.2vw, 60px);
+  overflow-wrap: normal;
+}
+
+.bench-panel .lead {
+  margin-bottom: 28px;
+}
+
+.bench-panel .section-title {
+  margin-top: 40px;
+}
+
+.slots {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.slot {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.slot legend {
+  padding: 0;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.reagent-option {
+  position: relative;
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 12px;
+  align-items: center;
+  padding: 8px 10px;
+  border: 1.5px solid var(--grid-major);
+  border-radius: 6px;
+  background: var(--paper);
+  cursor: pointer;
+  line-height: 1.3;
+}
+
+.reagent-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.reagent-option:hover {
+  border-color: var(--ink);
+}
+
+.reagent-option:has(input:checked) {
+  border-color: var(--ink);
+  background: #fff6dc;
+}
+
+.reagent-option:has(input:focus-visible) {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.tube {
+  grid-row: span 2;
+  width: 12px;
+  height: 30px;
+  border: 1.5px solid var(--ink);
+  border-radius: 2px 2px 6px 6px;
+  background: linear-gradient(transparent 35%, var(--chip) 35%);
+}
+
+.reagent-name {
+  font-weight: 700;
+}
+
+.reagent-code {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.button {
+  padding: 12px 28px;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: var(--chestnut);
+  color: var(--paper);
+  font-family: var(--display);
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--ink);
+  transition: transform 0.08s, box-shadow 0.08s;
+}
+
+.button:active:not(:disabled) {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.button:disabled {
+  background: var(--paper);
+  color: var(--muted);
+  border-color: var(--grid-major);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.helper {
+  margin-top: 10px;
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.result {
+  margin-top: 28px;
+  padding: 18px 20px 20px;
+  border: 2px solid var(--ink);
+  border-left: 12px solid var(--chip);
+  border-radius: 6px;
+  background: #fff;
+  animation: result-in 0.35s cubic-bezier(0.2, 1.4, 0.5, 1);
+}
+
+@keyframes result-in {
+  from {
+    transform: translateY(8px) rotate(-1deg);
+    opacity: 0;
+  }
+}
+
+.result-outcome {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.result-name {
+  margin: 2px 0 6px;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+.trials {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 0;
+  list-style: none;
+}
+
+.trials li {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  gap: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--grid-major);
+  font-size: 15px;
+}
+
+.trial-n {
+  color: var(--chestnut);
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------------ speech bubble */
+
+.bubble {
+  width: max-content;
+  max-width: 260px;
+  padding: 10px 14px;
+  font-family: var(--text);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--ink);
+  background: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 14px 14px 14px 2px;
+  box-shadow: 4px 4px 0 var(--mustard);
+  transform: translate(55%, -60%);
+  animation: pop 0.25s cubic-bezier(0.3, 1.6, 0.6, 1);
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translate(55%, -40%) scale(0.85);
+  }
+}
+
+/* ------------------------------------------------------------------ loader */
+
+.loader {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 15px;
+  transition: opacity 0.5s;
+  pointer-events: none;
+}
+
+.loader-done {
+  opacity: 0;
+}
+
+.loader-tube {
+  position: relative;
+  width: 24px;
+  height: 90px;
+  border: 2px solid var(--ink);
+  border-radius: 3px 3px 12px 12px;
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.loader-fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--mustard);
+  transition: height 0.2s;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.colophon {
+  padding: 20px var(--gutter);
+  border-top: 2px solid var(--ink);
+  background: var(--paper);
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.colophon p {
+  max-width: 90ch;
+}
+
+/* ------------------------------------------------------------------ smaller screens */
+
+@media (max-width: 1000px) {
+  :root {
+    --margin: 120px;
+  }
+
+  .bench {
+    grid-template-columns: 1fr;
+  }
+
+  .bench-stage {
+    position: relative;
+    height: 62svh;
+  }
+
+  .bench-panel {
+    border-left: 0;
+    border-top: 2px solid var(--ink);
+  }
+}
+
+@media (max-width: 720px) {
+  :root {
+    --gutter: 16px;
+    --margin: 16px;
+    --mast: auto;
+  }
+
+  body {
+    font-size: 16px;
+  }
+
+  .masthead {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px var(--gutter) 10px;
+  }
+
+  .nav {
+    width: 100%;
+    overflow-x: auto;
+    gap: 14px;
+    padding-bottom: 4px;
+    font-size: 15px;
+  }
+
+  .hero {
+    height: auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-name {
+    position: relative;
+    inset: auto;
+    padding: 16px var(--gutter) 0;
+    font-size: 19vw;
+  }
+
+  .hero-stage {
+    position: relative;
+    height: 60svh;
+    margin-top: -14vw;
+    margin-bottom: -1svh;
+  }
+
+  .hero-foot {
+    position: static;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 0 var(--gutter) 32px;
+  }
+
+  .hero-intro {
+    font-size: 17px;
+  }
+
+  .hero-hints {
+    text-align: left;
+  }
+
+  .contents {
+    grid-template-columns: var(--margin) minmax(0, 1fr);
+    padding: 40px var(--gutter) 56px 0;
+  }
+
+  .contents-title,
+  .toc {
+    padding-left: 16px;
+  }
+
+  .toc-label {
+    font-size: 19px;
+  }
+
+  .page {
+    padding: 32px var(--gutter) 64px 0;
+  }
+
+  .page-head > *,
+  .section-body {
+    padding-left: 16px;
+  }
+
+  .page-head {
+    margin-bottom: 32px;
+  }
+
+  .folio {
+    grid-column: 2;
+    padding: 0 0 4px 16px;
+    text-align: left;
+  }
+
+  .page-head .page-title {
+    grid-row: 2;
+  }
+
+  .margin-note {
+    grid-column: 2;
+    padding: 0 0 6px 16px;
+    text-align: left;
+  }
+
+  .section {
+    margin-bottom: 40px;
+  }
+
+  .lead {
+    font-size: 18px;
+  }
+
+  .stat {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .stat-value {
+    min-width: 0;
+  }
+
+  .swatches li {
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 4px 14px;
+  }
+
+  .swatches .chip {
+    grid-row: span 2;
+    width: 48px;
+  }
+
+  .slots {
+    grid-template-columns: 1fr;
+  }
+
+  .bubble {
+    max-width: 180px;
+    font-size: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bubble,
+  .result {
+    animation: none;
+  }
+
+  .button {
+    transition: none;
+  }
+}
