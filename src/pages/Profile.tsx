@@ -7,6 +7,13 @@ export function Profile() {
     <NotebookPage
       folio={2}
       title="Profilo"
+      sections={[
+        { id: 'chi', label: 'Chi è' },
+        { id: 'scheda', label: 'Scheda' },
+        { id: 'colori', label: 'Com’è fatta' },
+        { id: 'cavallo', label: 'Il cavallo vero' },
+        { id: 'frasi', label: 'Cose che dice' },
+      ]}
       lead="Studentessa della Tracen Academy, ricercatrice per scelta, cavia per necessità. Soprattutto, molto veloce."
     >
       <Section id="chi" title="Chi è" note={<span lang="ja">アグネスタキオン</span>}>

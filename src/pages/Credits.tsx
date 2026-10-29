@@ -5,6 +5,11 @@ export function Credits() {
     <NotebookPage
       folio={5}
       title="Crediti"
+      sections={[
+        { id: 'modello', label: 'Modello 3D' },
+        { id: 'personaggio', label: 'Personaggio' },
+        { id: 'tecnica', label: 'Com’è fatto' },
+      ]}
       lead="Questo sito è un progetto fatto per passione. Ecco chi ha reso possibile cosa."
     >
       <Section
