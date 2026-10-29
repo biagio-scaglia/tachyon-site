@@ -3,11 +3,13 @@ import { Link } from 'react-router'
 import { LabStage } from '../components/LabStage'
 import { PAGES, QUOTES, REAGENTS, type Reagent } from '../data'
 import { useBubble, useShuffle } from '../hooks/useBubble'
+import { useIsTouch } from '../hooks/useMediaQuery'
 
 export function Home() {
   const [reagent, setReagent] = useState<Reagent>(REAGENTS[0])
   const { bubble, say } = useBubble()
   const nextQuote = useShuffle(QUOTES)
+  const touch = useIsTouch()
 
   const poke = useCallback(() => say(nextQuote()), [say, nextQuote])
   const pick = useCallback(
@@ -38,12 +40,25 @@ export function Home() {
             secondo è chiunque entri nel laboratorio.
           </p>
           <ul className="hero-hints" aria-label="Cosa puoi fare">
-            <li>
-              <strong>Muovi il cursore</strong> e ti segue con lo sguardo
-            </li>
-            <li>
-              <strong>Cliccala</strong> e dice qualcosa
-            </li>
+            {touch ? (
+              <>
+                <li>
+                  <strong>Tocca lo schermo</strong> e ti segue con lo sguardo
+                </li>
+                <li>
+                  <strong>Toccala</strong> e dice qualcosa
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <strong>Muovi il cursore</strong> e ti segue con lo sguardo
+                </li>
+                <li>
+                  <strong>Cliccala</strong> e dice qualcosa
+                </li>
+              </>
+            )}
             <li>
               <strong>Tocca una provetta</strong> per cambiare reagente
             </li>
