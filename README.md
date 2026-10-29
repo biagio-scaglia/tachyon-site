@@ -40,7 +40,9 @@ La posa a braccia abbassate e tutte le animazioni sono calcolate a runtime sulle
 
 ### Pubblicazione
 
-È una single page app: l'hosting deve rimandare ogni percorso a `index.html`, altrimenti ricaricando una pagina interna come `/profilo` si ottiene un 404.
+Ogni push su `main` pubblica il sito su GitHub Pages tramite [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml): https://biagio-scaglia.github.io/tachyon-site/
+
+La build usa il percorso base `/tachyon-site/` (vedi `vite.config.ts`); `npm run dev` resta alla radice. Pages non ha un fallback per le single page app, quindi il workflow copia `index.html` in `404.html`: così anche ricaricando una pagina interna come `/profilo` il sito si apre.
 
 ## Crediti
 
